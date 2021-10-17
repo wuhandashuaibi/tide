@@ -1,6 +1,19 @@
-import numpy as np
-ann = np.array([1,2,3,4,2,3,2,1])
-a_re = np.concatenate((np.repeat(ann[0], -2, axis=0), ann), axis=0)
-print(a_re)
+import heapq
 
-# [{'_id': 63550, 'score': 0.9967881441116333, 'image_id': 375493, 'class': 1, 'bbox': [254.6083984375, 29.804187774658203, 112.082275390625, 436.7032470703125], 'mask': None, 'ignore': False}, {'_id': 63550, 'score': 0.9967881441116333, 'image_id': 375493, 'class': 1, 'bbox': [254.6083984375, 29.804187774658203, 112.082275390625, 436.7032470703125], 'mask': None, 'ignore': False}]
+def mid_num(arr):
+    l = len(arr)//2+1
+    hp = [-x for x in arr[:l]]
+    heapq.heapify(hp)
+    for k in range(l,len(arr)):
+        if -hp[0]>arr[k]:
+            heapq.heappop(hp)
+            heapq.heappush(hp,-arr[k])
+    hp = [-x for x in hp]
+    if len(arr)%2==0:
+        return (hp[0]+hp[1])/2
+    else:
+        return hp[0]
+
+if __name__ == '__main__':
+    print(sorted([2,3,4,1,4,5,3,8]))
+    print(mid_num([2,3,4,1,4,5,3,8]))
