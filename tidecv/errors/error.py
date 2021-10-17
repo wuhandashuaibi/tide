@@ -1,6 +1,10 @@
 from typing import Union
 
+<<<<<<< HEAD
 import cv2, os
+=======
+import cv2
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 from .. import functions as f
 
 class Error:
@@ -36,6 +40,7 @@ class Error:
 	
 	
 	def show(self, dataset, out_path:str=None,
+<<<<<<< HEAD
 		pred_color:tuple=(0, 255, 255), gt_color:tuple=(255, 0, 0),
 		font=cv2.FONT_HERSHEY_COMPLEX_SMALL,
 			 val2017='/Users/wuhan/tide/examples/val2017/'):
@@ -49,12 +54,29 @@ class Error:
 		if hasattr(self, 'gt'):
 			img = cv2.rectangle(img, *f.points(self.gt['bbox']), gt_color, 2)
 			img = cv2.putText(img, str(self.gt['class']),
+=======
+		pred_color:tuple=(43, 12, 183), gt_color:tuple=(43, 183, 12),
+		font=cv2.FONT_HERSHEY_SIMPLEX):
+		
+		pred = self.pred if hasattr(self, 'pred') else self.gt
+		img = dataset.get_img_with_anns(pred['image_id'])
+
+		
+		if hasattr(self, 'gt'):
+			img = cv2.rectangle(img, *f.points(self.gt['bbox']), gt_color, 2)
+			img = cv2.putText(img, dataset.cat_name(self.gt['category_id']),
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 				(100, 200), font, 1, gt_color, 2, cv2.LINE_AA, False)
 	
 		if hasattr(self, 'pred'):
 			img = cv2.rectangle(img, *f.points(pred['bbox']), pred_color, 2)
+<<<<<<< HEAD
 			img = cv2.putText(img, '%s (%.2f)' % (str(pred['class']), pred['score']),
 				(100, 100), font, 0.7, pred_color, 2, cv2.LINE_AA, False)
+=======
+			img = cv2.putText(img, '%s (%.2f)' % (dataset.cat_name(pred['category_id']), pred['score']),
+				(100, 100), font, 1, pred_color, 2, cv2.LINE_AA, False)
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 
 		if out_path is None:
 			cv2.imshow(self.short_name, img)
@@ -63,8 +85,13 @@ class Error:
 			cv2.waitKey()
 			cv2.destroyAllWindows()
 		else:
+<<<<<<< HEAD
 			cv2.imwrite(os.path.join(out_path,str(pred['image_id']).zfill(12)+'.jpg'), img)
 			print('img done', os.path.join(out_path,str(pred['image_id']).zfill(12)+'.jpg'))
+=======
+			cv2.imwrite(out_path, img)
+	
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 	def get_info(self, dataset):
 		info = {}
 		info['type'] = self.short_name

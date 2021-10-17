@@ -38,11 +38,15 @@ class TIDEExample:
 
 		# Sort descending by score
 		preds.sort(key=lambda pred: -pred['score'])
+<<<<<<< HEAD
 		# preds = np.array(preds)
 		# preds = np.concatenate((np.repeat(preds[0],max_dets-len(preds) if len(preds)<max_dets else 0, axis=0),preds),axis=0)
 		preds = preds[:max_dets]
 		# print('--',preds[0:2])
 		# print(len(preds))
+=======
+		preds = preds[:max_dets]
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 		self.preds = preds # Update internally so TIDERun can update itself if :max_dets takes effect
 		detections = [x[det_type] for x in preds]
 
@@ -137,13 +141,20 @@ class TIDERun:
 	# Temporary variables stored in ground truth that we need to clear after a run
 	_temp_vars = ['best_score', 'best_id', 'used', 'matched_with', '_idx', 'usable']
 
+<<<<<<< HEAD
 	def __init__(self, gt:Data, preds:Data, pos_thresh:float, bg_thresh:float, mode:str,
 				 max_dets:int, run_errors:bool=True, outfile=None):
+=======
+	def __init__(self, gt:Data, preds:Data, pos_thresh:float, bg_thresh:float, mode:str, max_dets:int, run_errors:bool=True):
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 		self.gt     = gt
 		self.preds  = preds
 
 		self.errors     = []
+<<<<<<< HEAD
 		# self.errors_dict_thr = {thr:{_type: [] for _type in TIDE._error_types} for thr in [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]}
+=======
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 		self.error_dict = {_type: [] for _type in TIDE._error_types}
 		self.ap_data = ClassedAPDataObject()
 		self.qualifiers = {}
@@ -157,7 +168,10 @@ class TIDERun:
 		self.max_dets   = max_dets
 		self.run_errors = run_errors
 
+<<<<<<< HEAD
 		self.outfile = outfile
+=======
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 		self._run()
 
 
@@ -198,6 +212,7 @@ class TIDERun:
 				if var in gt:
 					del gt[var]
 
+<<<<<<< HEAD
 	def _add_error(self, error, thr=None):
 		self.errors.append(error)
 		self.error_dict[type(error)].append(error)
@@ -205,6 +220,14 @@ class TIDERun:
 		# print(len(self.errors_dict_thr[thr][type(error)]))
 	def _eval_image(self, preds:list, gt:list):
 
+=======
+	def _add_error(self, error):
+		self.errors.append(error)
+		self.error_dict[type(error)].append(error)
+
+	def _eval_image(self, preds:list, gt:list):
+		
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 		for truth in gt:
 			if not truth['ignore']:
 				self.ap_data.add_gt_positives(truth['class'], 1)
@@ -224,37 +247,55 @@ class TIDERun:
 		preds = ex.preds # In case the number of predictions was restricted to the max
 
 		for pred_idx, pred in enumerate(preds):
+<<<<<<< HEAD
 			# print(pred_idx)
 			# print(pred)
 			# print('------------------------------')
 			# print(pred)
+=======
+
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 			pred['info'] = {'iou': pred['iou'], 'used': pred['used']}
 			if pred['used']: pred['info']['matched_with'] = pred['matched_with']
 			
 			if pred['used'] is not None:
 				self.ap_data.push(pred['class'], pred['_id'], pred['score'], pred['used'], pred['info'])
+<<<<<<< HEAD
 			# ----- ERROR DETECTION ------ #
 			# This prediction is a negative (or ignored), let's find out why
 			if self.run_errors and (pred['used'] == False or pred['used'] == None):
 				print(pred['_id'])
+=======
+			
+			# ----- ERROR DETECTION ------ #
+			# This prediction is a negative (or ignored), let's find out why
+			if self.run_errors and (pred['used'] == False or pred['used'] == None):
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 				# Test for BackgroundError
 				if len(ex.gt) == 0: # Note this is ex.gt because it doesn't include ignore annotations
 					# There is no ground truth for this image, so just mark everything as BackgroundError
 					self._add_error(BackgroundError(pred))
+<<<<<<< HEAD
 					if self.outfile is not None:
 						BackE = BackgroundError(pred)
 						BackE.show(dataset=self.gt, out_path=os.path.join(self.outfile,BackE.short_name))
+=======
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 					continue
 
 				# Test for BoxError
 				idx = ex.gt_cls_iou[pred_idx, :].argmax()
 				if self.bg_thresh <= ex.gt_cls_iou[pred_idx, idx] <= self.pos_thresh:
 					# This detection would have been positive if it had higher IoU with this GT
+<<<<<<< HEAD
 
 					self._add_error(BoxError(pred, ex.gt[idx], ex))
 					if self.outfile is not None:
 						BoxE = BoxError(pred,ex.gt[idx], ex)
 						BoxE.show(self.gt,out_path=os.path.join(self.outfile,BoxE.short_name))
+=======
+					self._add_error(BoxError(pred, ex.gt[idx], ex))
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 					continue
 
 				# Test for ClassError
@@ -262,9 +303,12 @@ class TIDERun:
 				if ex.gt_noncls_iou[pred_idx, idx] >= self.pos_thresh:
 					# This detection would have been a positive if it was the correct class
 					self._add_error(ClassError(pred, ex.gt[idx], ex))
+<<<<<<< HEAD
 					if self.outfile is not None:
 						ClassE = ClassError(pred, ex.gt[idx], ex)
 						ClassE.show(self.gt,out_path=os.path.join(self.outfile,ClassE.short_name))
+=======
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 					continue
 
 				# Test for DuplicateError
@@ -273,9 +317,12 @@ class TIDERun:
 					# The detection would have been marked positive but the GT was already in use
 					suppressor = self.preds.annotations[ex.gt[idx]['matched_with']]
 					self._add_error(DuplicateError(pred, suppressor))
+<<<<<<< HEAD
 					if self.outfile is not None:
 						DuplicateE = DuplicateError(pred, suppressor)
 						DuplicateE.show(self.gt,out_path=os.path.join(self.outfile,DuplicateE.short_name))
+=======
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 					continue
 					
 				# Test for BackgroundError
@@ -283,14 +330,21 @@ class TIDERun:
 				if ex.gt_iou[pred_idx, idx] <= self.bg_thresh:
 					# This should have been marked as background
 					self._add_error(BackgroundError(pred))
+<<<<<<< HEAD
 					if self.outfile is not None:
 						BackgroundE = BackgroundError(pred)
 						BackgroundE.show(self.gt,out_path=os.path.join(self.outfile,BackgroundE.short_name))
+=======
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 					continue
 
 				# A base case to catch uncaught errors
 				self._add_error(OtherError(pred))
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 		for truth in gt:
 			# If the GT wasn't used in matching, meaning it's some kind of false negative
 			if not truth['ignore'] and not truth['used']:
@@ -303,9 +357,12 @@ class TIDERun:
 					# Note: 'usable' is set in error.py
 					if not truth['usable']:
 						self._add_error(MissedError(truth))
+<<<<<<< HEAD
 						if self.outfile is not None:
 							MissedE = MissedError(truth)
 							MissedE.show(self.gt,out_path=os.path.join(self.outfile,MissedE.short_name))
+=======
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 				
 
 
@@ -380,10 +437,14 @@ class TIDERun:
 			# If an error is negative that means it's likely due to binning differences, so just
 			# Ignore the negative by setting it to 0.
 			errors[error] = max(new_ap - last_ap, 0)
+<<<<<<< HEAD
 			# print('-------------')
 			# print(error,':', 'new_ap', new_ap,   'last_ap', last_ap)
 			# print('-------------')
 
+=======
+			
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 			if progressive:
 				last_ap = new_ap
 				ap_data = _ap_data
@@ -401,7 +462,10 @@ class TIDERun:
 
 	def count_errors(self, error_types:list=None, qual=None):
 		counts = {}
+<<<<<<< HEAD
 		# counts_thrs = {thr:{_type: int for _type in TIDE._error_types} for thr in [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]}
+=======
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 
 		if error_types is None:
 			error_types = TIDE._error_types
@@ -409,6 +473,7 @@ class TIDERun:
 		for error in error_types:
 			if qual is None:
 				counts[error] = len(self.error_dict[error])
+<<<<<<< HEAD
 
 			else:
 				func = qualifiers.make_qualifier(error, qual)
@@ -417,6 +482,12 @@ class TIDERun:
 		# 	for error in error_types:
 		# 		counts_thrs[t][error] = len(self.errors_dict_thr[t][error])
 		# print()
+=======
+			else:
+				func = qualifiers.make_qualifier(error, qual)
+				counts[error] = len([x for x in self.errors if func(x)])
+		
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 		return counts
 
 
@@ -463,8 +534,12 @@ class TIDE:
 	BOX  = 'bbox'
 	MASK = 'mask'
 
+<<<<<<< HEAD
 	def __init__(self, pos_threshold:float=0.5, background_threshold:float=0.1, mode:str=BOX,
 				 ):
+=======
+	def __init__(self, pos_threshold:float=0.5, background_threshold:float=0.1, mode:str=BOX):
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 		self.pos_thresh = pos_threshold
 		self.bg_thresh  = background_threshold
 		self.mode       = mode
@@ -482,11 +557,16 @@ class TIDE:
 
 
 	def evaluate(self, gt:Data, preds:Data, pos_threshold:float=None, background_threshold:float=None,
+<<<<<<< HEAD
 					   mode:str=None, name:str=None, use_for_errors:bool=True, outfile=None, thr=None) -> TIDERun:
+=======
+					   mode:str=None, name:str=None, use_for_errors:bool=True) -> TIDERun:
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 		pos_thresh = self.pos_thresh if pos_threshold        is None else pos_threshold
 		bg_thresh  = self.bg_thresh  if background_threshold is None else background_threshold
 		mode       = self.mode       if mode                 is None else mode
 		name       = preds.name      if name                 is None else name
+<<<<<<< HEAD
 		run = TIDERun(gt, preds, pos_thresh, bg_thresh, mode, gt.max_dets, use_for_errors,
 					  outfile=outfile)
 		# print(run.count_errors())
@@ -498,6 +578,18 @@ class TIDE:
 
 	def evaluate_range(self, gt:Data, preds:Data, thresholds:list=COCO_THRESHOLDS, pos_threshold:float=None,
 							background_threshold:float=None, mode:str=None, name:str=None, outfile=None) -> dict:
+=======
+
+		run = TIDERun(gt, preds, pos_thresh, bg_thresh, mode, gt.max_dets, use_for_errors)
+
+		if use_for_errors:
+			self.runs[name] = run
+		
+		return run
+
+	def evaluate_range(self, gt:Data, preds:Data, thresholds:list=COCO_THRESHOLDS, pos_threshold:float=None,
+							background_threshold:float=None, mode:str=None, name:str=None) -> dict:
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 
 		if pos_threshold is None: pos_threshold = self.pos_thresh
 		if name          is None: name          = preds.name
@@ -505,6 +597,7 @@ class TIDE:
 		self.run_thresholds[name] = []
 
 		for thresh in thresholds:
+<<<<<<< HEAD
 			run = self.evaluate(gt, preds, pos_threshold=thresh, background_threshold=background_threshold,
 				mode=mode, name=name, use_for_errors=(pos_threshold == thresh), outfile=outfile)
 			if pos_threshold==thresh:
@@ -517,6 +610,14 @@ class TIDE:
 			self.run_thresholds[name].append(run)
 		# _, count_error = run.count_errors()
 		# print(count_error)
+=======
+			
+			run = self.evaluate(gt, preds, pos_threshold=thresh, background_threshold=background_threshold,
+				mode=mode, name=name, use_for_errors=(pos_threshold == thresh))
+			
+			self.run_thresholds[name].append(run)
+
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 	def add_qualifiers(self, *quals):
 		"""
 		Applies any number of Qualifier objects to evaluations that have been run up to now.
@@ -573,6 +674,7 @@ class TIDE:
 						['Name'] + list(self.qualifiers.keys()),
 						[' AP '] + ['{:6.2f}'.format(qAP) for qAP in qAPs]
 					], title='Qualifiers {}'.format(ap_title))
+<<<<<<< HEAD
 				# for c_run in thresh_runs:
 				# 	count_errors = c_run.count_errors()
 				# 	print(count_errors)
@@ -584,6 +686,9 @@ class TIDE:
 				#
 				# 	print()
 				print()
+=======
+
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 			# Otherwise, print just the one run we did
 			else:
 				# Print Overall AP for a regular run
@@ -600,6 +705,10 @@ class TIDE:
 					], title='Qualifiers {}'.format(ap_title))
 			
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 			print()
 			# Print the main errors
 			P.print_table([
@@ -607,6 +716,11 @@ class TIDE:
 				[' dAP'] + ['{:6.2f}'.format(main_errors[run_name][err.short_name]) for err in TIDE._error_types]
 			], title='Main Errors')
 
+<<<<<<< HEAD
+=======
+			
+				
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 			print()
 			# Print the special errors
 			P.print_table([
@@ -616,7 +730,10 @@ class TIDE:
 			
 			print()
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 	def plot(self, out_dir:str=None):
 		"""
 		Plots a summary model for each run in this TIDE object.
@@ -656,6 +773,10 @@ class TIDE:
 					error.short_name: value
 						for error, value in run.fix_main_errors().items()
 				}
+<<<<<<< HEAD
+=======
+		
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 		return errors
 
 	def get_special_errors(self):

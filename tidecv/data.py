@@ -69,7 +69,11 @@ class Data():
 		self.annotations.append({
 			'_id'   : new_id,
 			'score' : score,
+<<<<<<< HEAD
 			'image_id' : image_id,
+=======
+			'image' : image_id,
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 			'class' : class_id,
 			'bbox'  : self._prepare_box(box),
 			'mask'  : self._prepare_mask(mask),
@@ -108,6 +112,7 @@ class Data():
 	def get(self, image_id:int):
 		""" Collects all the annotations / detections for that particular image. """
 		return [self.annotations[x] for x in self.images[image_id]['anns']]
+<<<<<<< HEAD
 
 	def cat_name(self, class_id):
 		cat_map = {1: 'person', 2: 'bicycle', 3: 'car', 4: 'motorcycle', 5: 'airplane', 6: 'bus',
@@ -124,3 +129,5 @@ class Data():
 				   70: 'toilet', 72: 'tv', 73: 'laptop', 74: 'mouse', 75: 'remote', 76: 'keyboard',
 				   77: 'cell phone', 78: 'microwave', 79: 'oven', 80: 'toaster', 81: 'sink', 82: 'refrigerator', 84: 'book', 85: 'clock', 86: 'vase', 87: 'scissors', 88: 'teddy bear', 89: 'hair drier', 90: 'toothbrush'}
 		return cat_map[class_id]
+=======
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1

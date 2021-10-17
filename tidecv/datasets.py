@@ -57,7 +57,11 @@ def download_annotations(name:str, url:str, force_download:bool=False) -> str:
 
 
 
+<<<<<<< HEAD
 def COCO(path:str=None, name:str=None, year:int=2017, ann_set:str='val', force_download:bool=False):
+=======
+def COCO(path:str=None, name:str=None, year:int=2017, ann_set:str='val', force_download:bool=False) -> Data:
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 	"""
 	Loads ground truth from a COCO-style annotation file.
 	
@@ -81,8 +85,12 @@ def COCO(path:str=None, name:str=None, year:int=2017, ann_set:str='val', force_d
 	anns   = cocojson['annotations']
 	cats   = cocojson['categories'] if 'categories' in cocojson else None
 
+<<<<<<< HEAD
 	# print(images[0]['file_name'])
 	# print(images[0]['id'])
+=======
+
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 	# Add everything from the coco json into our data structure
 	data = Data(name, max_dets=100)
 
@@ -91,7 +99,11 @@ def COCO(path:str=None, name:str=None, year:int=2017, ann_set:str='val', force_d
 	for idx, image in enumerate(images):
 		image_lookup[image['id']] = image
 		data.add_image(image['id'], image['file_name'])
+<<<<<<< HEAD
 	# print(image_lookup)
+=======
+
+>>>>>>> 49a5d2a4aeb56795e93a3ed7cc7e6d25757bb4c1
 	if cats is not None:
 		for cat in cats:
 			data.add_class(cat['id'], cat['name'])
